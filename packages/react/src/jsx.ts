@@ -34,33 +34,33 @@ export const jsx = (type: ElementType, config: any, ...maybeChildren: any) => {
 	// 处理Config
 	for (const prop in config) {
 		const val = config[prop];
-		if (prop==='key') {
-			if (val!== undefined) {
-				key= ''+val
+		if (prop === 'key') {
+			if (val !== undefined) {
+				key = '' + val;
 			}
-			continue
+			continue;
 		}
-		if (prop==='ref') {
-			if (val!== undefined) {
-				ref= ''+val
+		if (prop === 'ref') {
+			if (val !== undefined) {
+				ref = '' + val;
 			}
-			continue
+			continue;
 		}
 		if ({}.hasOwnProperty.call(config, prop)) {
-			props[prop] = val
+			props[prop] = val;
 		}
 	}
 
 	// 处理maybeChildren
-	const maybeChildrenLength = maybeChildren.length
+	const maybeChildrenLength = maybeChildren.length;
 	if (maybeChildren) {
-		if (maybeChildrenLength===1) {
-			props.children = maybeChildren[0]
-		}else {
-			props.children = maybeChildren
+		if (maybeChildrenLength === 1) {
+			props.children = maybeChildren[0];
+		} else {
+			props.children = maybeChildren;
 		}
 	}
-	return ReactElement(type, key, ref, props)
+	return ReactElement(type, key, ref, props);
 };
 
 export const jsxDEV = (type: ElementType, config: any) => {
@@ -71,23 +71,21 @@ export const jsxDEV = (type: ElementType, config: any) => {
 	// 处理Config
 	for (const prop in config) {
 		const val = config[prop];
-		if (prop==='key') {
-			if (val!== undefined) {
-				key= ''+val
+		if (prop === 'key') {
+			if (val !== undefined) {
+				key = '' + val;
 			}
-			continue
+			continue;
 		}
-		if (prop==='ref') {
-			if (val!== undefined) {
-				ref= ''+val
+		if (prop === 'ref') {
+			if (val !== undefined) {
+				ref = '' + val;
 			}
-			continue
+			continue;
 		}
 		if ({}.hasOwnProperty.call(config, prop)) {
-			props[prop] = val
+			props[prop] = val;
 		}
 	}
-	return ReactElement(type, key, ref, props)
+	return ReactElement(type, key, ref, props);
 };
-
-
