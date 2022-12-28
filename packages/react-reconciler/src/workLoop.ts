@@ -62,6 +62,8 @@ function renderRoot(root: FiberRootNode) {
 			workInProgress = null;
 		}
 	} while (true);
+
+	// 整个更新流程完成之后生成wip fiberNode树
 	const finishedWork = root.current.alternate;
 	root.finishedWork = finishedWork;
 

@@ -28,6 +28,7 @@ export const completeWork = (wip: FiberNode) => {
 				appendAllChildren(instance, wip);
 				wip.stateNode = instance;
 			}
+			// 将子fiberNode的flags冒泡到父fiberNode
 			bubbleProperties(wip);
 			return null;
 		case HostText:
@@ -36,6 +37,7 @@ export const completeWork = (wip: FiberNode) => {
 			} else {
 				// 1. 构建DOM
 				const instance = createTextInstance(newProps.content);
+				// 2.不需要插入，HostText不存在childen
 				wip.stateNode = instance;
 			}
 			bubbleProperties(wip);
@@ -52,11 +54,18 @@ export const completeWork = (wip: FiberNode) => {
 	}
 };
 
+/**
+ *
+ * @param parent
+ * @param wip
+ * @returns
+ */
 function appendAllChildren(parent: FiberNode, wip: FiberNode) {
 	let node = wip.child;
 
 	while (node !== null) {
 		if (node.tag === HostComponent || node.tag === HostText) {
+			// 插入方法
 			appendInitialChild(parent, node?.stateNode);
 		} else if (node.child !== null) {
 			node.child.return = node;
@@ -68,6 +77,7 @@ function appendAllChildren(parent: FiberNode, wip: FiberNode) {
 			return;
 		}
 
+		// 向上归的阶段
 		while (node.sibling === null) {
 			if (node.return === null || node.return === wip) {
 				return;
@@ -79,11 +89,26 @@ function appendAllChildren(parent: FiberNode, wip: FiberNode) {
 	}
 }
 
+/**
+ * 将子fiberNode的flags冒泡到父fiberNode
+ * @param wip
+ */
 function bubbleProperties(wip: FiberNode) {
 	let subtreeFlags = NoFlags;
 	let child = wip.child;
 
 	while (child !== null) {
+		// 按位“或”赋值运算符 (|=)
+		/**
+		 * 或等符号
+				例如a |= 5
+				等价于 a = a|5
+				或运算（位运算）的方法：
+				1|1=1
+				1|0=1
+				0|1=1
+				0|0=0
+		 */
 		subtreeFlags |= child.subtreeFlags;
 		subtreeFlags |= child.flags;
 

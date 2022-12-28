@@ -22,6 +22,7 @@ export class FiberNode {
 	alternate: FiberNode | null;
 	// 标识插入删除的标识
 	flags: Flags;
+	// 子树中存在的flags
 	subtreeFlags: Flags;
 	updateQueue: unknown;
 
