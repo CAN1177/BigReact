@@ -16,11 +16,13 @@ export function resolvePkgPath(pkgName, isDist) {
 }
 
 export function getPackageJSON(pkgName) {
+	// 包路径
 	const path = `${resolvePkgPath(pkgName)}/package.json`;
 	const str = fs.readFileSync(path, 'utf8');
 	return JSON.parse(str);
 }
 
+// 获取所有公用plugins
 export function getBaseRollupPlugins({
 	alias = { __DEV__: true },
 	typescript = {}

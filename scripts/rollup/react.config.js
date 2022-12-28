@@ -13,10 +13,12 @@ export default [
 		output: {
 			file: `${pkgDistPath}/index.js`,
 			name: 'index.js',
+			// umd 兼容com和esm格式
 			format: 'umd'
 		},
 		plugins: [
 			...getBaseRollupPlugins(),
+			// 打包输出package.json 文件
 			generatePackageJson({
 				inputFolder: pkgPath,
 				outputFolder: pkgDistPath,

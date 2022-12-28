@@ -5,7 +5,7 @@ import {
 	Key,
 	Ref,
 	Props,
-	ReactElement,
+	ReactElementType,
 	ElementType
 } from 'shared/ReactTypes';
 
@@ -14,7 +14,7 @@ const ReactElement = function (
 	key: Key,
 	ref: Ref,
 	props: Props
-): ReactElement {
+): ReactElementType {
 	const element = {
 		$$typeof: REACT_ELEMENT_TYPE,
 		key,
@@ -27,8 +27,10 @@ const ReactElement = function (
 };
 
 export const jsx = (type: ElementType, config: any, ...maybeChildren: any) => {
+	// config中的配置
 	let key: Key = null;
 	const props: Props = {};
+
 	let ref: Ref = null;
 
 	// 处理Config
@@ -42,7 +44,7 @@ export const jsx = (type: ElementType, config: any, ...maybeChildren: any) => {
 		}
 		if (prop === 'ref') {
 			if (val !== undefined) {
-				ref = '' + val;
+				ref = val;
 			}
 			continue;
 		}

@@ -5,6 +5,7 @@ export type WorkTag =
 	| typeof HostText;
 
 export const FunctionComponent = 0;
+// 项目挂载根节点
 export const HostRoot = 3;
 
 export const HostComponent = 5;

@@ -1,3 +1,5 @@
+// 类型单独定义
+
 export type Type = any;
 export type Key = any;
 export type Ref = any;
