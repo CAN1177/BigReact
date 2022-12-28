@@ -17,8 +17,10 @@ export const beginWork = (wip: FiberNode) => {
 		case HostComponent:
 			return updateHostComponent(wip);
 		case HostText:
+			// 没有子节点
 			return null;
 		default:
+			// 在开发环境__DEV__会被编译为true
 			if (__DEV__) {
 				console.warn('beginWork未实现的类型');
 			}
@@ -53,6 +55,12 @@ function updateHostComponent(wip: FiberNode) {
 	return wip.child;
 }
 
+/**
+ * 如果是首次渲染，则会把已经处理好的fiber树进行挂载。
+ * 如果不是首次渲染则调用reconcileChildFibers进行下一步处理。
+ * @param wip
+ * @param children
+ */
 function reconcileChildren(wip: FiberNode, children?: ReactElementType) {
 	const current = wip.alternate;
 

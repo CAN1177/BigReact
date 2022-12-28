@@ -12,20 +12,27 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 	) {
 		// 根据element创建fiber
 		const fiber = createFiberFromElement(element);
+		// 父节点执向returnFiber
 		fiber.return = returnFiber;
 		return fiber;
 	}
 	function reconcileSingleTextNode(
 		returnFiber: FiberNode,
 		currentFiber: FiberNode | null,
-		content: string | number
+		content: string | number //保存文本内容
 	) {
 		const fiber = new FiberNode(HostText, { content }, null);
 		fiber.return = returnFiber;
 		return fiber;
 	}
 
+	/**
+	 * 插入单一节点
+	 * @param fiber
+	 * @returns
+	 */
 	function placeSingleChild(fiber: FiberNode) {
+		// 应该追踪副作用 && 首屏渲染情况
 		if (shouldTrackEffects && fiber.alternate === null) {
 			fiber.flags |= Placement;
 		}
@@ -52,12 +59,13 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 					break;
 			}
 		}
-		// 多节点情况
+		// 多节点情况（暂时不处理）TODO
 
 		// HostText 文本节点
-
 		if (typeof newChild === 'string' || typeof newChild === 'number') {
-			return reconcileSingleTextNode(returnFiber, currentFiber, newChild);
+			return placeSingleChild(
+				reconcileSingleTextNode(returnFiber, currentFiber, newChild)
+			);
 		}
 
 		// 以上情况都不满足

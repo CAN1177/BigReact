@@ -24,6 +24,7 @@ export function getPackageJSON(pkgName) {
 
 // 获取所有公用plugins
 export function getBaseRollupPlugins({
+	// 为开发环境增加__DEV__标识，方便Dev包打印更多信息
 	alias = { __DEV__: true },
 	typescript = {}
 } = {}) {
