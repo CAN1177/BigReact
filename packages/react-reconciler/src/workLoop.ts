@@ -86,7 +86,7 @@ function commitRoot(root: FiberRootNode) {
 	root.finishedWork = null;
 
 	// 判断是否存在3个子阶段需要执行的操作
-	// root flags root subtreeFlags
+	// root flags     root subtreeFlags
 	const subtreeHasEffect =
 		(finishedWork.subtreeFlags & MutationMask) !== NoFlags;
 	const rootHasEffect = (finishedWork.flags & MutationMask) !== NoFlags;
@@ -96,8 +96,8 @@ function commitRoot(root: FiberRootNode) {
 		// mutation Placement
 		commitMutationEffects(finishedWork);
 
+		// fiber树的切换
 		root.current = finishedWork;
-
 		// layout
 	} else {
 		root.current = finishedWork;

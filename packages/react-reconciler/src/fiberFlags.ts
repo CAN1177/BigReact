@@ -11,4 +11,5 @@ export const Update = 0b0000100;
 // 删除子节点
 export const ChildDeletion = 0b0001000;
 
+// mutation 阶段需要执行的操作
 export const MutationMask = Placement | Update | ChildDeletion;
