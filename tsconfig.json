@@ -18,7 +18,7 @@
 		"skipLibCheck": true,
 		"baseUrl": "./packages",
 		"paths": {
-			"hostConfig": ["./react-dom/src/hostConfig.ts"]
+			"hostConfig": ["./react-dom/src/hostConfig.ts"] // 不同数组环境都需要hostConfig
 		}
 	}
 }

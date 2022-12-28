@@ -16,10 +16,11 @@ export class FiberNode {
 	index: number;
 	ref: Ref;
 	memoizedProps: Props | null;
+	// 用来存储在上次渲染过程中最终获得的节点的`state`的
 	memoizedState: any;
-	// 用于两颗filbreNode 树之间的切换
+	// 用于两颗filbreNode 树之间的切换（current 与 workInProgress）
 	alternate: FiberNode | null;
-
+	// 标识插入删除的标识
 	flags: Flags;
 	subtreeFlags: Flags;
 	updateQueue: unknown;
@@ -31,9 +32,12 @@ export class FiberNode {
 
 		// HostComponent <div>  div DOM
 		this.stateNode = null;
-		// FunctionComponent
+		// FunctionComponent的类型
 		this.type = null;
 
+		/**
+		 * 构成树状结构
+		 */
 		// 指向父fiberNode
 		this.return = null;
 		// 指向右边兄弟节点
@@ -44,11 +48,16 @@ export class FiberNode {
 
 		this.ref = null;
 
-		// 作为工作单元
+		/**
+		 * 作为工作单元
+		 */
 		this.pendingProps = pendingProps;
 		this.memoizedProps = null;
-
+		this.memoizedState = null;
+		this.updateQueue = null;
 		this.alternate = null;
+
+		// 副作用
 		this.flags = NoFlags;
 		this.subtreeFlags = NoFlags;
 	}
@@ -57,6 +66,7 @@ export class FiberNode {
 export class FiberRootNode {
 	container: Container;
 	current: FiberNode;
+	// 更新完成之后的FiberNode
 	finishedWork: FiberNode | null;
 	constructor(container: Container, hostRootFiber: FiberNode) {
 		this.container = container;
@@ -66,6 +76,7 @@ export class FiberRootNode {
 	}
 }
 
+// 创建WorkInProgress
 export const createWorkInProgress = (
 	current: FiberNode,
 	pendingProps: Props
@@ -73,10 +84,9 @@ export const createWorkInProgress = (
 	let wip = current.alternate;
 
 	if (wip === null) {
-		// mount
+		// mount挂载
 		wip = new FiberNode(current.tag, pendingProps, current.key);
 		wip.stateNode = current.stateNode;
-
 		wip.alternate = current;
 		current.alternate = wip;
 	} else {

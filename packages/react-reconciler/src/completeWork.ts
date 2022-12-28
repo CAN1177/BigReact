@@ -7,6 +7,11 @@ import { FiberNode } from './fiber';
 import { NoFlags } from './fiberFlags';
 import { HostRoot, HostText, HostComponent } from './workTags';
 
+/**
+ * 递归中的归
+ * @param wip
+ * @returns
+ */
 export const completeWork = (wip: FiberNode) => {
 	// 递归中的归
 	const newProps = wip.pendingProps;

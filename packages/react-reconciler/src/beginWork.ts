@@ -4,7 +4,11 @@ import { FiberNode } from './fiber';
 import { processUpdateQueue, UpdateQueue } from './updateQueue';
 import { HostComponent, HostRoot, HostText } from './workTags';
 
-// 递归中的递阶段
+/**
+ * 递归中的递阶段 递：对应beginWork
+ * @param wip
+ * @returns 返回子fiberNode
+ */
 export const beginWork = (wip: FiberNode) => {
 	// 比较，返回子fiberNode
 	switch (wip.tag) {
