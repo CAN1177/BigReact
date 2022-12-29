@@ -7,5 +7,5 @@ export function renderWithHooks(wip: FiberNode) {
 
 	const children = Component(props);
 
-	return children
+	return children;
 }

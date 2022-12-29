@@ -6,7 +6,12 @@ import {
 } from 'hostConfig';
 import { FiberNode } from './fiber';
 import { NoFlags } from './fiberFlags';
-import { HostRoot, HostText, HostComponent, FunctionComponent } from './workTags';
+import {
+	HostRoot,
+	HostText,
+	HostComponent,
+	FunctionComponent
+} from './workTags';
 
 /**
  * 递归中的归
