@@ -6,7 +6,7 @@ import {
 } from 'hostConfig';
 import { FiberNode } from './fiber';
 import { NoFlags } from './fiberFlags';
-import { HostRoot, HostText, HostComponent } from './workTags';
+import { HostRoot, HostText, HostComponent, FunctionComponent } from './workTags';
 
 /**
  * 递归中的归
@@ -43,6 +43,9 @@ export const completeWork = (wip: FiberNode) => {
 				// 2.不需要插入，HostText不存在childen
 				wip.stateNode = instance;
 			}
+			bubbleProperties(wip);
+			return null;
+		case FunctionComponent:
 			bubbleProperties(wip);
 			return null;
 		case HostRoot:

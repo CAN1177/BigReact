@@ -1,8 +1,14 @@
 import { ReactElementType } from 'shared/ReactTypes';
 import { mountChildFibers, reconcileChildFibers } from './childFibers';
 import { FiberNode } from './fiber';
+import { renderWithHooks } from './fiberHooks';
 import { processUpdateQueue, UpdateQueue } from './updateQueue';
-import { HostComponent, HostRoot, HostText } from './workTags';
+import {
+	FunctionComponent,
+	HostComponent,
+	HostRoot,
+	HostText
+} from './workTags';
 
 /**
  * 递归中的递阶段 递：对应beginWork
@@ -19,6 +25,8 @@ export const beginWork = (wip: FiberNode) => {
 		case HostText:
 			// 没有子节点
 			return null;
+		case FunctionComponent:
+			return updateFunctionComponent(wip);
 		default:
 			// 在开发环境__DEV__会被编译为true
 			if (__DEV__) {
@@ -28,6 +36,17 @@ export const beginWork = (wip: FiberNode) => {
 	}
 	return null;
 };
+
+/**
+ *
+ * @param wip
+ */
+function updateFunctionComponent(wip: FiberNode) {
+	const nextChildren = renderWithHooks(wip);
+
+	reconcileChildren(wip, nextChildren);
+	return wip.child;
+}
 
 /**
  * 计算状态最新值
