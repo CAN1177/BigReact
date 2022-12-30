@@ -8,11 +8,11 @@ export type ElementType = any;
 
 export interface ReactElementType {
 	$$typeof: symbol | number;
-	key: Key;
-	ref: Ref;
-	props: Props;
 	type: ElementType;
+	key: Key;
+	props: Props;
+	ref: Ref;
 	__mark: string;
 }
 
-export type Action<State> = State | ((Private: State) => State);
+export type Action<State> = State | ((prevState: State) => State);

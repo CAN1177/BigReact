@@ -1,4 +1,4 @@
-import { jsxDEV } from './src/jsx';
+import { jsx, jsxDEV, isValidElement as isValidElementFn } from './src/jsx';
 import { Dispatcher, resolveDispatcher } from './src/currentDispatcher';
 import currentDispatcher from './src/currentDispatcher';
 // 在react中暴露出去useState方法
@@ -12,7 +12,11 @@ export const __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = {
 	currentDispatcher
 };
 
-export default {
-	version: '0.0.0',
-	createElement: jsxDEV
-};
+export const version = '0.0.0';
+export const createElement = jsx;
+export const isValidElement = isValidElementFn;
+
+// export default {
+// 	version: '0.0.0',
+// 	createElement: jsxDEV
+// };
