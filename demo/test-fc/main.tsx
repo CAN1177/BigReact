@@ -3,9 +3,8 @@ import ReactDOM from 'react-dom/client';
 
 function App() {
 	const [num, setNum] = useState(100);
-
-	window.setNum = setNum;
-	return <div>{num}</div>;
+	
+	return num === 100 ? <div>{num}</div> : <Child />;
 }
 
 function Child() {
