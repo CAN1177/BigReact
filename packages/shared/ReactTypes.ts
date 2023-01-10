@@ -15,4 +15,5 @@ export interface ReactElementType {
 	__mark: string;
 }
 
+// 创建Update 实例 所需要的类型
 export type Action<State> = State | ((prevState: State) => State);

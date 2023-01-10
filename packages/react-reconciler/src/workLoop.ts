@@ -28,17 +28,19 @@ export function scheduleUpdateOnFiber(fiber: FiberNode) {
 }
 
 /**
- *
+ * 标记更新自Fiber从更节点
  * @param fiber
  * @returns
  */
 function markUpdateFromFiberToRoot(fiber: FiberNode) {
 	let node = fiber;
 	let parent = node.return;
+	// 普通的fiberNode
 	while (parent !== null) {
 		node = parent;
 		parent = node.return;
 	}
+	// 是hostRootNode，则返回stateNode
 	if (node.tag === HostRoot) {
 		return node.stateNode;
 	}
@@ -125,6 +127,7 @@ function performUnitOfWork(fiber: FiberNode) {
 	fiber.memoizedProps = fiber.pendingProps;
 
 	if (next === null) {
+		// 这里就完成了递阶段，需要归了
 		completeUnitOfWork(fiber);
 	} else {
 		workInProgress = next;
@@ -132,7 +135,7 @@ function performUnitOfWork(fiber: FiberNode) {
 }
 
 /**
- * 归阶段，继续向下遍历
+ * 归阶段，继续向上遍历
  * 完成当前节点的work，并赋值Effect链，然后移动到兄弟节点，重复该操作，当没有更多兄弟节点时，返回至父节点，最终返回至root节点
  * @param fiber
  * @returns

@@ -19,9 +19,10 @@ export const createUpdate = <State>(action: Action<State>): Update<State> => {
 	};
 };
 
-// 初始化创建UpdateQueue
+// 初始化创建UpdateQueue 数据结构
 export const createUpdateQueue = <State>() => {
 	return {
+		// 包含shared.pending
 		shared: {
 			pending: null
 		},
@@ -48,7 +49,9 @@ export const enqueueUpdate = <Action>(
  * @returns
  */
 export const processUpdateQueue = <State>(
+	// 初始状态
 	baseState: State,
+	// 消费的update
 	pendingUpdate: Update<State> | null
 ): { memoizedState: State } => {
 	const result: ReturnType<typeof processUpdateQueue<State>> = {
@@ -58,8 +61,10 @@ export const processUpdateQueue = <State>(
 	if (pendingUpdate !== null) {
 		const action = pendingUpdate.action;
 		if (action instanceof Function) {
+			// baseState为1, update为 x=> x*2 memoizedState结果： 2
 			result.memoizedState = action(baseState);
 		} else {
+			// baseState为1, update为2 ===》 memoizedState结果： 2
 			result.memoizedState = action;
 		}
 	}

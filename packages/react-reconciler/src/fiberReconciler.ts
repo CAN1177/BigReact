@@ -12,20 +12,20 @@ import { ReactElementType } from 'shared/ReactTypes';
 import { scheduleUpdateOnFiber } from './workLoop';
 
 /**
- * 来创建root
+ * ReactDOM.createRoot()执行时，createRoot方法内部执行createContainer
  * @param container
  * @returns
  */
 export function createContainer(container: Container) {
 	const hostRootFiber = new FiberNode(HostRoot, {}, null);
 	const root = new FiberRootNode(container, hostRootFiber);
-	// 与之前的更新机制做关联
+	// 与之前的更新机制（createUpdateQueue）做关联
 	hostRootFiber.updateQueue = createUpdateQueue();
 	return root;
 }
 
 /**
- *
+ *ReactDOM.createRoot()。render执行时，render方法内部执行updateContainer
  * @param element
  * @param root
  * @returns

@@ -4,12 +4,16 @@ import { FunctionComponent, HostComponent, WorkTag } from './workTags';
 import { Flags, NoFlags } from './fiberFlags';
 import { Container } from 'hostConfig';
 
+/**
+ * 存放FiberNode的数据结构
+ */
 export class FiberNode {
 	type: any;
 	tag: WorkTag;
 	pendingProps: Props;
 	key: Key;
 	stateNode: any;
+	// 指向父fiberNode
 	return: FiberNode | null;
 	sibling: FiberNode | null;
 	child: FiberNode | null;
@@ -20,7 +24,7 @@ export class FiberNode {
 	memoizedState: any;
 	// 用于两颗filbreNode 树之间的切换（current 与 workInProgress）
 	alternate: FiberNode | null;
-	// 标识插入删除的标识
+	// 标识插入删除的标记
 	flags: Flags;
 	// 子树中存在的flags
 	subtreeFlags: Flags;
@@ -29,13 +33,12 @@ export class FiberNode {
 	deletions: FiberNode[] | null;
 
 	constructor(tag: WorkTag, pendingProps: Props, key: Key) {
-		// 实例
+		// 实例属性
 		this.tag = tag;
 		this.key = key;
-
-		// HostComponent <div>  div DOM
+		// 对于HostComponent 来说<div>，  stateNode就是div的DOM
 		this.stateNode = null;
-		// FunctionComponent的类型
+		// FiberNode的类型
 		this.type = null;
 
 		/**
@@ -47,6 +50,7 @@ export class FiberNode {
 		this.sibling = null;
 		// 指向子节点
 		this.child = null;
+		// 标记相同节点的顺序
 		this.index = 0;
 
 		this.ref = null;
@@ -54,7 +58,9 @@ export class FiberNode {
 		/**
 		 * 作为工作单元
 		 */
+		// 工作单元刚开始工作时的props
 		this.pendingProps = pendingProps;
+		// 工作单元完成之后的props
 		this.memoizedProps = null;
 		this.memoizedState = null;
 		this.updateQueue = null;
@@ -69,9 +75,11 @@ export class FiberNode {
 }
 
 export class FiberRootNode {
+	// 对应数组环境挂载的节点，比如RootElement
 	container: Container;
+	// 指向hostRootFiber的指针，看那个图示
 	current: FiberNode;
-	// 更新完成之后的FiberNode
+	// 更新完成之后的hostRootFiber的指针，看那个图示
 	finishedWork: FiberNode | null;
 	constructor(container: Container, hostRootFiber: FiberNode) {
 		this.container = container;
@@ -81,7 +89,13 @@ export class FiberRootNode {
 	}
 }
 
-// 创建WorkInProgress
+/**
+ * 创建WorkInProgress
+ * 双缓存机制： wip 后区缓存 current 前区缓冲，然后二者直接在内存中切换（交换）
+ * @param current
+ * @param pendingProps
+ * @returns
+ */
 export const createWorkInProgress = (
 	current: FiberNode,
 	pendingProps: Props
@@ -89,7 +103,7 @@ export const createWorkInProgress = (
 	let wip = current.alternate;
 
 	if (wip === null) {
-		// mount挂载
+		// mount挂载，也就是首屏渲染的时候
 		wip = new FiberNode(current.tag, pendingProps, current.key);
 		wip.stateNode = current.stateNode;
 		wip.alternate = current;
@@ -97,6 +111,8 @@ export const createWorkInProgress = (
 	} else {
 		// update
 		wip.pendingProps = pendingProps;
+
+		//清除副作用，有可能是上次遗留下来的
 		wip.flags = NoFlags;
 		wip.subtreeFlags = NoFlags;
 		wip.deletions = null;

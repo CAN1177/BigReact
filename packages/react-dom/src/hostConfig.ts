@@ -1,3 +1,6 @@
+/**
+ * 该文件用来描述数组环境方法
+ */
 import { FiberNode } from 'react-reconciler/src/fiber';
 import { HostText } from 'react-reconciler/src/workTags';
 import { Props } from 'shared/ReactTypes';
