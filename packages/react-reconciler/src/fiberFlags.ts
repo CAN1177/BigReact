@@ -5,7 +5,7 @@ export const NoFlags = 0b0000000;
 // 插入
 export const Placement = 0b0000001;
 
-// 更新
+// 更新 他与属性相关
 export const Update = 0b0000010;
 
 // 删除子节点

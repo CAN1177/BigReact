@@ -10,6 +10,11 @@ import { HostText } from './workTags';
 
 type ExistingChildren = Map<string | number, FiberNode>;
 
+/**
+ * 生成子节点与标记副作用
+ * @param shouldTrackEffects 是否追踪副作用
+ * @returns
+ */
 function ChildReconciler(shouldTrackEffects: boolean) {
 	function deleteChild(returnFiber: FiberNode, childToDelete: FiberNode) {
 		if (!shouldTrackEffects) {
@@ -40,9 +45,9 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 
 	/**
 	 * 处理单节点的更新流程（目前）
-	 * @param returnFiber
-	 * @param currentFiber
-	 * @param element
+	 * @param returnFiber 父亲fiber
+	 * @param currentFiber 当前fiber
+	 * @param element ReactElement
 	 * @returns
 	 */
 	function reconcileSingleElement(
@@ -255,6 +260,7 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 		return null;
 	}
 
+	// 形成闭包， 在beginwork 中调用
 	return function reconcileChildFibers(
 		returnFiber: FiberNode,
 		currentFiber: FiberNode | null,
@@ -263,7 +269,7 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 		// 判断当前fiber的类型
 		if (typeof newChild === 'object' && newChild !== null) {
 			switch (newChild.$$typeof) {
-				case REACT_ELEMENT_TYPE:
+				case REACT_ELEMENT_TYPE: //代表当前节点是ReactElement
 					return placeSingleChild(
 						reconcileSingleElement(returnFiber, currentFiber, newChild)
 					);
@@ -275,7 +281,7 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 					break;
 			}
 		}
-		// 多节点情况
+		// 多节点情况 ul*li*3
 		if (Array.isArray(newChild)) {
 			return reconcileChildrenArray(returnFiber, currentFiber, newChild);
 		}
@@ -313,5 +319,7 @@ function useFiber(fiber: FiberNode, pendingProps: Props): FiberNode {
 	return clone;
 }
 
+// update 时 需要追踪副作用
 export const reconcileChildFibers = ChildReconciler(true);
+// mount 时 不需要追踪副作用
 export const mountChildFibers = ChildReconciler(false);

@@ -43,7 +43,8 @@ export const enqueueUpdate = <Action>(
 };
 
 /**
- *  UpdataQueue 消费Update的过程
+ * UpdataQueue 消费Update的过程
+ * 也是计算状态的最新值
  * @param baseState
  * @param pendingUpdate
  * @returns

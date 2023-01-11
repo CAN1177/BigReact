@@ -13,6 +13,7 @@ let workInProgress: FiberNode | null = null;
  * @param root
  */
 function prepareFreshStacks(root: FiberRootNode) {
+	// 也就是hostRootFiber(第四课第二节图示),的wip
 	workInProgress = createWorkInProgress(root.current, {});
 }
 

@@ -49,8 +49,8 @@ function updateFunctionComponent(wip: FiberNode) {
 }
 
 /**
- * 计算状态最新值
- * 创造子fiberNode
+ * 1、计算状态最新值
+ * 2、创造子fiberNode
  * @param wip
  * @returns
  */
@@ -60,6 +60,7 @@ function updateHostRoot(wip: FiberNode) {
 	const pending = updateQueue.shared.pending;
 	updateQueue.shared.pending = null;
 	const { memoizedState } = processUpdateQueue(baseState, pending);
+	// 这里获取到最新状态, 也即是子对应的reactElement
 	wip.memoizedState = memoizedState;
 
 	const nextChildren = wip.memoizedState;
@@ -68,8 +69,11 @@ function updateHostRoot(wip: FiberNode) {
 }
 
 function updateHostComponent(wip: FiberNode) {
+	// 因为children 在 props 属性里面
+	// <div> <span><span></span></span> </div>
 	const nextProps = wip.pendingProps;
 	const nextChildren = nextProps.children;
+
 	reconcileChildren(wip, nextChildren);
 	return wip.child;
 }
@@ -77,11 +81,13 @@ function updateHostComponent(wip: FiberNode) {
 /**
  * 如果是首次渲染，则会把已经处理好的fiber树进行挂载。
  * 如果不是首次渲染则调用reconcileChildFibers进行下一步处理。
+ * 最终返回子fiberNode
  * @param wip
  * @param children
  */
 function reconcileChildren(wip: FiberNode, children?: ReactElementType) {
-	const current = wip.alternate;
+	// 因为对比的是子节点的current fiberNode 与 子节点的reactElement
+	const current = wip.alternate; // 就是父节点的current node, 下面才能current.child
 
 	if (current !== null) {
 		// update

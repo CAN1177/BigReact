@@ -126,6 +126,11 @@ export const createWorkInProgress = (
 	return wip;
 };
 
+/**
+ * 根据element创建fiber
+ * @param element
+ * @returns
+ */
 export function createFiberFromElement(element: ReactElementType): FiberNode {
 	const { type, key, props } = element;
 	let fiberTag: WorkTag = FunctionComponent;
