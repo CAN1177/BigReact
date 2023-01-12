@@ -1,7 +1,7 @@
 import { jsx, jsxDEV, isValidElement as isValidElementFn } from './src/jsx';
 import { Dispatcher, resolveDispatcher } from './src/currentDispatcher';
 import currentDispatcher from './src/currentDispatcher';
-// 在react中暴露出去useState方法
+// 在react中暴露出去hooks useState方法
 export const useState: Dispatcher['useState'] = (initialState) => {
 	const dispatcher = resolveDispatcher();
 	return dispatcher.useState(initialState);

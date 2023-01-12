@@ -21,10 +21,12 @@ import {
 	HostText
 } from './workTags';
 
+// 指向在一个需要执行的Effect
 let nextEffect: FiberNode | null = null;
 
 /**
  * 提交HostComponent的side effect，也就是DOM节点的操作(增删改)
+ * 配合第六课的图示代码
  * @param finishedWork
  */
 export const commitMutationEffects = (finishedWork: FiberNode) => {
@@ -38,9 +40,11 @@ export const commitMutationEffects = (finishedWork: FiberNode) => {
 			(nextEffect.subtreeFlags & MutationMask) !== NoFlags &&
 			child !== null
 		) {
+			// 继续向子节点遍历
 			nextEffect = child;
 		} else {
 			// 向上遍历 DFS， up:为命名
+			// 找到底了
 			up: while (nextEffect !== null) {
 				commitMutaitonEffectsOnFiber(nextEffect);
 				const sibling: FiberNode | null = nextEffect.sibling;
@@ -57,7 +61,9 @@ export const commitMutationEffects = (finishedWork: FiberNode) => {
 };
 
 /**
- *
+ * 据flag进行不同的处理。
+ * 如 Placement会将Fiber对应的DOM渲染在浏览器上。
+ * Update会更新对应的DOM节点。
  * @param finishedWork
  */
 const commitMutaitonEffectsOnFiber = (finishedWork: FiberNode) => {
@@ -170,10 +176,10 @@ const commitPlacement = (finishedWork: FiberNode) => {
 	// 获取父级parent DOM
 	const hostParent = getHostParent(finishedWork);
 
-	// host sibling
+	// hostsibling 兄弟节点
 	const sibling = getHostSibling(finishedWork);
 
-	// finishedWork ~~ DOM append parent DOM
+	// finishedWork ~~ DOM append parentDOM
 	if (hostParent !== null) {
 		insertOrAppendPlacementNodeIntoContainer(finishedWork, hostParent, sibling);
 	}
@@ -234,7 +240,7 @@ function getHostParent(fiber: FiberNode): Container | null {
 
 	while (parent) {
 		const parentTag = parent.tag;
-		// HostComponent HostRoot的情况下
+		// HostComponent HostRoot的情况下（parent.tag对应的数组环境下的父级节点）
 		if (parentTag === HostComponent) {
 			return parent.stateNode as Container;
 		}

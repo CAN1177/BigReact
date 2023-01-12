@@ -19,6 +19,7 @@ function prepareFreshStacks(root: FiberRootNode) {
 
 /**
  * 在fiber中调度update任务
+ * 调度更新
  * @param fiber
  */
 export function scheduleUpdateOnFiber(fiber: FiberNode) {
@@ -70,11 +71,17 @@ function renderRoot(root: FiberRootNode) {
 	const finishedWork = root.current.alternate;
 	root.finishedWork = finishedWork;
 
-	// wip fiberNode树 树中的flags
+	// 根据 wip fiberNode树 树中的flags，执行具体的DOM操作
 	commitRoot(root);
 }
 
+/**
+ * commit 阶段所需要执行的方法
+ * @param root
+ * @returns
+ */
 function commitRoot(root: FiberRootNode) {
+	// finishedWork更新完成之后的hostRootFiber的指针
 	const finishedWork = root.finishedWork;
 
 	if (finishedWork === null) {
@@ -89,6 +96,7 @@ function commitRoot(root: FiberRootNode) {
 	root.finishedWork = null;
 
 	// 判断是否存在3个子阶段需要执行的操作
+
 	// root flags     root subtreeFlags
 	const subtreeHasEffect =
 		(finishedWork.subtreeFlags & MutationMask) !== NoFlags;

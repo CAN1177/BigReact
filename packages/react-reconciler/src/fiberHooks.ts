@@ -20,13 +20,18 @@ let currentHook: Hook | null = null;
 
 const { currentDispatcher } = internals;
 
-// 通用hooks
+// 通用hooks 的数据结构，满足基本所有hooks使用
 interface Hook {
-	memoizedState: any;
-	updateQueue: unknown;
-	next: Hook | null;
+	memoizedState: any; // 当前 hook 的 state，
+	updateQueue: unknown; // 多次调用，保存队列
+	next: Hook | null; // 指向下一个hooks
 }
 
+/**
+ * 执行我们定义的函数式组件的渲染以及调度其中的 hook
+ * @param wip
+ * @returns
+ */
 export function renderWithHooks(wip: FiberNode) {
 	// 赋值操作
 	currentlyRenderingFiber = wip;
@@ -123,6 +128,11 @@ function updateWorkInProgresHook(): Hook {
 	return workInProgressHook;
 }
 
+/**
+ * 当首次渲染时，调用 mountState 时，返回 [hook.memoizedState, dispatch] 。
+ * @param initialState
+ * @returns
+ */
 function mountState<State>(
 	initialState: (() => State) | State
 ): [State, Dispatch<State>] {
@@ -134,6 +144,7 @@ function mountState<State>(
 	} else {
 		memoizedState = initialState;
 	}
+	// useState可以触发更新
 	const queue = createUpdateQueue<State>();
 	hook.updateQueue = queue;
 	hook.memoizedState = memoizedState;
@@ -146,6 +157,7 @@ function mountState<State>(
 
 /**
  * 触发更新
+ * 实现dispatch方法，并接入现有更新流程内
  * @param fiber
  * @param updateQueue
  * @param action
@@ -156,9 +168,14 @@ function dispatchSetState<State>(
 	action: Action<State>
 ) {
 	const update = createUpdate(action);
+	// 接入更新流程
 	enqueueUpdate(updateQueue, update);
 	scheduleUpdateOnFiber(fiber);
 }
+/**
+ * 当前useState对应的hooks数据
+ * @returns
+ */
 function mountWorkInProgresHook(): Hook {
 	const hook: Hook = {
 		memoizedState: null,
@@ -166,16 +183,18 @@ function mountWorkInProgresHook(): Hook {
 		next: null
 	};
 	if (workInProgressHook === null) {
-		// mount时 第一个hook
+		// mount时的第一个hook
 		if (currentlyRenderingFiber === null) {
+			// 没有在函数组件内执行hooks
 			throw new Error('请在函数组件内调用hook');
 		} else {
 			workInProgressHook = hook;
 			currentlyRenderingFiber.memoizedState = workInProgressHook;
 		}
 	} else {
-		// mount时 后续的hook
+		// mount时后续的hook
 		workInProgressHook.next = hook;
+		// 指向第二个hook
 		workInProgressHook = hook;
 	}
 	return workInProgressHook;

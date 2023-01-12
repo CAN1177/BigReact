@@ -40,7 +40,8 @@ export const completeWork = (wip: FiberNode) => {
 				// 2. 变了 Update 打个flag
 				updateFiberProps(wip.stateNode, newProps);
 			} else {
-				// 1. 构建DOM
+				// 也就是首屏渲染的流程
+				// 1. 构建DOM   instance  n.例证；实体；个体
 				// const instance = createInstance(wip.type, newProps);
 				const instance = createInstance(wip.type, newProps);
 
@@ -83,9 +84,9 @@ export const completeWork = (wip: FiberNode) => {
 };
 
 /**
- *
- * @param parent
- * @param wip
+ * 将DOM插入到DOM树中
+ * @param parent 接受的节点
+ * @param wip 被插入的节点
  * @returns
  */
 function appendAllChildren(parent: Container, wip: FiberNode) {
@@ -104,7 +105,6 @@ function appendAllChildren(parent: Container, wip: FiberNode) {
 		if (node === wip) {
 			return;
 		}
-
 		// 向上归的阶段
 		while (node.sibling === null) {
 			if (node.return === null || node.return === wip) {
@@ -141,6 +141,7 @@ function bubbleProperties(wip: FiberNode) {
 		subtreeFlags |= child.flags;
 
 		child.return = wip;
+		// 遍历兄弟
 		child = child.sibling;
 	}
 	wip.subtreeFlags |= subtreeFlags;
