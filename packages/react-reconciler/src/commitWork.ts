@@ -43,12 +43,12 @@ export const commitMutationEffects = (finishedWork: FiberNode) => {
 			// 继续向子节点遍历
 			nextEffect = child;
 		} else {
-			// 向上遍历 DFS， up:为命名
-			// 找到底了
+			// 向上遍历 DFS， up:为命名 | 找到底了
+			// while 循环可以设置标签（label)，用于break或continue
 			up: while (nextEffect !== null) {
 				commitMutaitonEffectsOnFiber(nextEffect);
 				const sibling: FiberNode | null = nextEffect.sibling;
-
+				// 如果有兄弟节点，直接返回兄弟节点,也就是子节点找完了,找兄弟节点
 				if (sibling !== null) {
 					nextEffect = sibling;
 					break up;
@@ -96,7 +96,8 @@ const commitMutaitonEffectsOnFiber = (finishedWork: FiberNode) => {
 };
 
 /**
- * 删除每个节点fiber方法
+ * 1、删除每个节点fiber方法
+ * 2、递归子树
  * @param childToDelete
  */
 function commitDeletion(childToDelete: FiberNode) {
@@ -154,6 +155,7 @@ function commitNestedComponent(
 			// 终止条件
 			return;
 		}
+		// 处理兄弟节点
 		while (node.sibling === null) {
 			if (node.return === null || node.return === root) {
 				return;

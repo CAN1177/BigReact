@@ -15,6 +15,7 @@ import {
  * @param wip
  * @returns 返回子fiberNode
  */
+
 export const beginWork = (wip: FiberNode) => {
 	// 比较，返回子fiberNode
 	switch (wip.tag) {
