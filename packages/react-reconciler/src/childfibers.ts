@@ -44,7 +44,7 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 	}
 
 	/**
-	 * 处理单节点的更新流程（目前）
+	 * 处理单节点的更新流程（目前） 单节点
 	 * @param returnFiber 父亲fiber
 	 * @param currentFiber 当前fiber
 	 * @param element ReactElement
@@ -62,7 +62,7 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 				// key 相同
 				if (element.$$typeof === REACT_ELEMENT_TYPE) {
 					if (currentFiber.type === element.type) {
-						// type 相同
+						// type 相同，可复用
 						const existing = useFiber(currentFiber, element.props);
 						existing.return = returnFiber;
 						// 当前节点可复用，需要删除其他剩余节点
@@ -136,6 +136,7 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 
 	/**
 	 * 多看看文档，还没掌握🌟
+	 * 对于同级多节点的diff
 	 * @param returnFiber
 	 * @param currentFirstChild
 	 * @param newChild
@@ -173,6 +174,7 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 
 			// 3. 标记移动还是插入
 			newFiber.index = i;
+			// 父级
 			newFiber.return = returnFiber;
 
 			if (lastNewFiber === null) {
@@ -183,6 +185,7 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 				lastNewFiber = lastNewFiber.sibling;
 			}
 
+			// 不追踪副作用
 			if (!shouldTrackEffects) {
 				continue;
 			}
@@ -195,11 +198,11 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 					newFiber.flags |= Placement;
 					continue;
 				} else {
-					// 不移动
+					// 不移动， 更新下标
 					lastPlacedIndex = oldIndex;
 				}
 			} else {
-				// mount
+				// mount， 插入
 				newFiber.flags |= Placement;
 			}
 		}
@@ -225,21 +228,24 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 		element: any
 	): FiberNode | null {
 		const keyToUse = element.key !== null ? element.key : index;
+		// 更新前对应的fiber节点
 		const before = existingChildren.get(keyToUse);
 
 		// HostText
 		if (typeof element === 'string' || typeof element === 'number') {
 			if (before) {
+				// 更新之前如果是HostText的话
 				if (before.tag === HostText) {
 					// 直接删除之前的，直接复用
 					existingChildren.delete(keyToUse);
 					return useFiber(before, { content: element + '' });
 				}
 			}
+			// 如果不能复用 返回新的节点
 			return new FiberNode(HostText, { content: element + '' }, null);
 		}
 
-		// ReactElement(这里不太明白🌟)
+		// 判断是否为ReactElement
 		if (typeof element === 'object' && element !== null) {
 			switch (element.$$typeof) {
 				case REACT_ELEMENT_TYPE:
@@ -252,7 +258,7 @@ function ChildReconciler(shouldTrackEffects: boolean) {
 					return createFiberFromElement(element);
 			}
 
-			// TODO 数组类型
+			// TODO 数组类型， 看文档解析
 			if (Array.isArray(element) && __DEV__) {
 				console.warn('还未实现数组类型的child');
 			}

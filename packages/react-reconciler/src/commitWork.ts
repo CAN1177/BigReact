@@ -188,6 +188,7 @@ const commitPlacement = (finishedWork: FiberNode) => {
 };
 
 /**
+ * 需要找到「目标兄弟Host节点」
  * React和DOM的那些事-节点新增算法
  * https://juejin.cn/post/6920897301116354574
  * @param fiber
@@ -197,6 +198,7 @@ function getHostSibling(fiber: FiberNode) {
 	let node: FiberNode = fiber;
 
 	findSibling: while (true) {
+		// 向上遍历
 		while (node.sibling === null) {
 			const parent = node.return;
 

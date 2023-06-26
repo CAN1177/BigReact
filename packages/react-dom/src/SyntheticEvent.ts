@@ -43,7 +43,6 @@ export function updateFiberProps(node: DOMElement, props: Props) {
 export function initEvent(container: Container, eventType: string) {
 	if (!validEventTypeList.includes(eventType)) {
 		console.warn('当前不支持', eventType, '事件');
-
 		return;
 	}
 
